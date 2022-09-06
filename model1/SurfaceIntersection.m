@@ -73,7 +73,7 @@ end
 %% Parse extra parameters
 getIntersection = (nargout>1);
 debug = true;
-PointRoundingTol = 1e6;
+PointRoundingTol = 1e12;
 algorithm = 'moller';
 k=1;
 nVarargs = length(varargin);

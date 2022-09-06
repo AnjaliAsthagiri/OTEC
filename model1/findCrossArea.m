@@ -10,11 +10,11 @@ function [tot_tri_area] = findCrossArea(distance, obj_tri, dimension)
 %     tot_tri_area: the calculated crosssectional area
     
     if dimension == 'x'
-        plane_pts = [distance, -100, -100; distance, -100, 100; distance, 100, 100; distance, 100, -100];
+        plane_pts = [distance, -1000000, -1000000; distance, -1000000, 1000000; distance, 1000000, 1000000; distance, 1000000, -1000000];
     elseif dimension == 'y'
-        plane_pts = [-100, distance, -100; -100, distance, 100; 100, distance, 100; 100, distance, -100];
+        plane_pts = [-5, distance, -5; -5, distance, 5; 5, distance, 5; 5, distance, -5];
     elseif dimension == 'z'
-        plane_pts = [-100, -100, distance; -100, 100, distance; 100, 100, distance; 100, -100, distance];
+        plane_pts = [-5, -5, distance; -5, 5, distance; 5, 5, distance; 5, -5, distance];
     end
     
     plane_cl = [1, 2, 3; 3, 4, 1];
