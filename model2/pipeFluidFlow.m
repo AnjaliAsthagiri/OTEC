@@ -8,45 +8,46 @@ cold_temp = 279.15; % NEED TO CHANGE BELOW TOO
 data_matrix = [];
 
 count = 1;
-for pipe_radius = .001 : .005 : .01
+for pipe_radius = [.001 : .01 : .1, .1 : .25 : 5]
     for pipe_length = .1 : .25 : 5
         for velocity = 0.1 : 0.125 : 2.5
             for TE_thickness_exp = -10 : .35 : -3
                 TE_thickness = exp(TE_thickness_exp);
-                %%
-                TE_thickness = 0.0011;
-                pipe_length = 4.85;
-                pipe_radius = 0.021;
+%                 
+                TE_thickness = 0.001;
+                pipe_length = 1;
+                pipe_radius = 1;
                 velocity = .1;
 
-                volumetric_flow_rate = velocity*pi*pipe_radius*pipe_radius*1000;
-                pressure = 8*dynamic_visc*pipe_length*volumetric_flow_rate/(pi*pipe_radius^4);
+                kg_flow_rate = velocity*pi*pipe_radius*pipe_radius*997;
+                pressure = 8*dynamic_visc*pipe_length*kg_flow_rate/(pi*pipe_radius^4);
                 pump_pow_pipe = pressure*pi*pipe_radius*pipe_radius*velocity;
 
-                r = linspace(0,pipe_radius,101);
-                x = linspace(0,pipe_length,101);
+                r = linspace(0,pipe_radius,2); %101
+                x = linspace(0,pipe_length,2); %101
                 dR = r(2)-r(1);
                 dX = x(2)-x(1);
 
                 m = 1;
                 sol = pdepe(m, @pdefun, @icfun, @bcfun, r, x, [], velocity, TE_thickness);
                 solFlipped = flipud((sol)');
-%%
-                imagesc(x,r,sol');
-                set(gca, 'YDir', 'normal');
-                colorbar
-                ylabel('Radius (m)', 'FontName', 'Arial', 'FontSize', 20)
-                xlabel('Distance from Pipe Inlet (m)','FontName', 'Arial', 'FontSize', 20)
-                title('Temperature Distribution within Pipe', 'FontName', 'Arial', 'FontSize', 30,'FontWeight','Normal')
-%%
+                
+% 
+%                 imagesc(x,r,sol');
+%                 set(gca, 'YDir', 'normal');
+%                 colorbar
+%                 ylabel('Radius (m)', 'FontName', 'Arial', 'FontSize', 20)
+%                 xlabel('Distance from Pipe Inlet (m)','FontName', 'Arial', 'FontSize', 20)
+%                 title('Temperature Distribution within Pipe', 'FontName', 'Arial', 'FontSize', 30,'FontWeight','Normal')
+
                 dElec_resistance = TE_elec_resistivity*TE_thickness/(2*pi*pipe_radius*dX);
                 pipe_pow = sum(arrayfun(@(x) powerfun(hot_temp-x, TE_seebeck, dElec_resistance),solFlipped(1,:)));
                 pump_pow_fraction = pump_pow_pipe/pipe_pow;
                 new_tot_pow = tot_pow/(1-pump_pow_fraction);
 
                 num_pipes = new_tot_pow/pipe_pow;
-                tot_material = (pi*TE_thickness*TE_thickness + 2*pipe_radius*TE_thickness)*pipe_length*num_pipes;
-                tot_water_rate_kg = volumetric_flow_rate*num_pipes;
+                tot_material = (pi*TE_thickness*TE_thickness + 2*pi*pipe_radius*TE_thickness)*pipe_length*num_pipes;
+                tot_water_rate_kg = kg_flow_rate*num_pipes;
 
                 cold_water_temp_change = 0;
                 for i = 1 : size(r,2)-1
@@ -62,9 +63,35 @@ for pipe_radius = .001 : .005 : .01
     end
 end
 %%
-data_matrix = round(data_matrix, 4);
-data_matrix = data_matrix(data_matrix(:,4)>0, :);
-data_matrix = data_matrix(data_matrix(:,5)>0, :);
+% data_matrix = round(data_matrix, 4);
+% data_matrix = data_matrix(data_matrix(:,4)>0, :);
+% data_matrix = data_matrix(data_matrix(:,5)>0, :);
+
+
+%determining costs
+wall_thickness = 0.0015;
+CuNiAlloy_cost_kg = 10;
+outer_radius = data_matrix(:,1) + data_matrix(:,8) + wall_thickness*2;
+outer_TE_radius = data_matrix(:,1) + data_matrix(:,8) + wall_thickness;
+outer_innerwall_radius = data_matrix(:,1) + wall_thickness;
+
+outer_wall_volume_per_pipe = data_matrix(:,2) .* pi .* (outer_radius.^2 - outer_TE_radius.^2);
+inner_wall_volume_per_pipe = data_matrix(:,2) .* pi .* (outer_innerwall_radius.^2 - data_matrix(:,1).^2);
+total_wall_volume = (outer_wall_volume_per_pipe + inner_wall_volume_per_pipe) .* data_matrix(:,3);
+total_wall_cost = total_wall_volume .* 8490 .* CuNiAlloy_cost_kg;
+
+BiTe_cost_kg = 280;
+total_te_cost = data_matrix(:,4) .* 7700 .* BiTe_cost_kg;
+
+data_matrix(:,10) = total_te_cost + total_wall_cost;
+
+% determining efficiency
+specific_heat_capacity_water = 4184; % j/(kg*oC)
+carnot_eff = (hot_temp-cold_temp)/hot_temp;
+total_heat_input = specific_heat_capacity_water .* data_matrix(:,9) .* data_matrix(:,5);
+
+data_matrix(:,11) = tot_pow./(total_heat_input.*carnot_eff);
+% data_matrix(:,11) = tot_pow./(total_heat_input);
 
 % data_filtered = data_matrix(data_matrix(:,1)==3.1, :);
 % data_filtered = data_filtered(data_filtered(:,7)==0.5, :);
