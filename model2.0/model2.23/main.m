@@ -11,7 +11,6 @@ createGraph(horzcat(vertcat(simArr.pipe).resolution), horzcat(vertcat(simArr.pow
 
 % save("simulation", simArr); % TODO
 
-
 imagesc(sim.pipe.length_arr,sim.pipe.radius_arr,sim.temperatures);
 set(gca, 'YDir', 'normal');
 colorbar

@@ -3,7 +3,7 @@
         
 function sim = simulate(sim)
     sim = calcTempDistribution(sim);
-%     sim = calcColdWaterTempChange(sim);
+    sim = calcColdWaterTempChange(sim);
     sim = calcPower(sim);
     
     sim = calcTEMaterialUse(sim);

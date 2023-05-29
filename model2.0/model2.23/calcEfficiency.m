@@ -1,6 +1,13 @@
 function sim = calcEfficiency(sim)
-    sim.Q_out = sim.cold_water.specific_heat_capacity*sim.total_kg_flow_rate*sim.cold_water_temp_change;
-    sim.Q_in = sim.Q_out + sim.power.new;
+    %energy lost through thermal conductance & electrical resistance -
+    %assuming max power/efficiency
+%     sim.Q_out = sim.cold_water.specific_heat_capacity*sim.total_kg_flow_rate*sim.cold_water_temp_change + sim.power.new;
+    %energy lost + energy generated
+%     sim.Q_in = sim.Q_out + sim.power.new;
+
+    %textbook equation
+    sim.Q_in = sim.cold_water.specific_heat_capacity*sim.total_kg_flow_rate*sim.cold_water_temp_change + sim.TE_material.seebeck*sim.power.pipe_current*sim.hot_water.temperature;
+    %total efficiency
     sim.efficiency = sim.total_power/sim.Q_in;
 
 %     carnot_eff = (sim.hot_water.temperature-sim.cold_water.temperature)/sim.hot_water.temperature;
