@@ -3,11 +3,11 @@
         
 function sim = simulate(sim)
     sim = calcTempDistribution(sim);
-    sim = calcColdWaterTempChange(sim);
+%     sim = calcColdWaterTempChange(sim);
     sim = calcPower(sim);
-    sim = calcWaterFlow(sim);
     
     sim = calcTEMaterialUse(sim);
+    sim = calcWaterFlow(sim);
     sim = calcEfficiency(sim);
     sim = calcCost(sim);
 end

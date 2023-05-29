@@ -1,10 +1,10 @@
 function sim = calcPower(sim)
-    pipe_pump_pow = getPumpPowerPerPipe(sim);
+    pipe_pumping_pow = getPumpPowerPerPipe(sim);
     dElec_resistance = sim.TE_material.electrical_resistivity * sim.TE_material.thickness / (2*pi*sim.pipe.radius*sim.pipe.dX);
-    pipe_pow = sum(arrayfun(@(x) powerfun(sim.hot_water.temp - x, sim.TE_material.seebeck, dElec_resistance), sim.temperatures(1,:)));
-    pump_pow_fraction = pipe_pump_pow/pipe_pow;
-    net_total_pow = total_power/(1-pump_pow_fraction);
-    sim.power = struct("net", net_total_pow, "pipe", pipe_pow, "pipe_pumping", pipe_pump_pow);
+    pipe_pow = sum(arrayfun(@(x) powerfun(sim.hot_water.temperature - x, sim.TE_material.seebeck, dElec_resistance), sim.temperatures(1,:)));
+    pump_pow_fraction = pipe_pumping_pow/pipe_pow;
+    new_total_pow_needed = sim.total_power/(1-pump_pow_fraction);
+    sim.power = struct("new", new_total_pow_needed, "pipe", pipe_pow, "pipe_pumping", pipe_pumping_pow);
 end
 
 function pipe_pump_pow = getPumpPowerPerPipe(sim)
