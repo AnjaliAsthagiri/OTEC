@@ -25,19 +25,19 @@ count = 1;
 
                 r = linspace(0,pipe_radius,101); %101
                 x = linspace(0,pipe_length,101); %101
-                dR = r(2)-r(1);
+                dR = r(2)-r(1);cd 
                 dX = x(2)-x(1);
 
                 m = 1;
                 sol = pdepe(m, @pdefun, @icfun, @bcfun, r, x, [], velocity, TE_thickness);
                 solFlipped = flipud((sol)');
                 
-                %imagesc(x,r,sol');
-                %set(gca, 'YD0ir', 'normal');
-                %colorbar
-                %ylabel('Radius (m)', 'FontName', 'Arial', 'FontSize', 20)
-                %xlabel('Distance from Pipe Inlet (m)','FontName', 'Arial', 'FontSize', 20)
-                %title('Temperature Distribution within Pipe', 'FontName', 'Arial', 'FontSize', 30,'FontWeight','Normal')
+                imagesc(x,r,sol');
+                %set(gca, 'YDir', 'normal');
+                colorbar
+                ylabel('Radius (m)', 'FontName', 'Arial', 'FontSize', 20)
+                xlabel('Distance from Pipe Inlet (m)','FontName', 'Arial', 'FontSize', 20)
+                title('Temperature Distribution within Pipe', 'FontName', 'Arial', 'FontSize', 30,'FontWeight','Normal')
 
                 dElec_resistance = TE_elec_resistivity*TE_thickness/(2*pi*pipe_radius*dX);
                 pipe_pow = sum(arrayfun(@(x) powerfun(hot_temp-x, TE_seebeck, dElec_resistance),solFlipped(1,:)));
@@ -134,33 +134,33 @@ xlabel('radius')
 ylabel('efficiency')
 hold off;
 
-%plot variables vs point where the value becomes acceptable 
-pipe_radius = 0.5 % in m
-pipe_length = 2 % in m
-velocity = 0.1 % in m/s 
-accuracy_goal = 0.01 % fractional differene allowed away from actual power
-%finding ideal power
-ideal_radius_step = 0.00005 % in m
-ideal_length_step = 0.01
-ideal_radius_res= linspace(0,pipe_radius, pipe_radius/ideal_radius_step);
-dR = ideal_radius_res(2) - ideal_radius_res(1);
-ideal_length_res= linspace(0,pipe_length,pipe_length/ideal_length_step);
-dX = ideal_length_res(2) - ideal_length_res(1);
-m = 1
-sol = pdepe (m, @pdefun, @icfun, @bcfun, ideal_radius_res, ideal_length_res, [], velocity, TE_thickness);
-solFlipped = flipud((sol)')
-dElec_resistance = TE_elec_resistivity*TE_thickness/(2*pi*pipe_radius*dX);
-ideal_pipe_pow = sum(arrayfun(@(x) powerfun(hot_temp-x, TE_seebeck, dElec_resistance),solFlipped(1,:)));
-%graphing power vs radius resolution
-length_step = 0.01;
-for radius_res = 10:300:10000
-    radius_step = pipe_radius/radius_res;
-    
-    %plot to test right now
-    
-    %get radius step vs power output, then fit with a log equation
-    target_const_radius_step = 
-end 
+% %plot variables vs point where the value becomes acceptable 
+% pipe_radius = 0.5 % in m
+% pipe_length = 2 % in m
+% velocity = 0.1 % in m/s 
+% accuracy_goal = 0.01 % fractional differene allowed away from actual power
+% %finding ideal power
+% ideal_radius_step = 0.00005 % in m
+% ideal_length_step = 0.01
+% ideal_radius_res= linspace(0,pipe_radius, pipe_radius/ideal_radius_step);
+% dR = ideal_radius_res(2) - ideal_radius_res(1);
+% ideal_length_res= linspace(0,pipe_length,pipe_length/ideal_length_step);
+% dX = ideal_length_res(2) - ideal_length_res(1);
+% m = 1
+% sol = pdepe (m, @pdefun, @icfun, @bcfun, ideal_radius_res, ideal_length_res, [], velocity, TE_thickness);
+% solFlipped = flipud((sol)')
+% dElec_resistance = TE_elec_resistivity*TE_thickness/(2*pi*pipe_radius*dX);
+% ideal_pipe_pow = sum(arrayfun(@(x) powerfun(hot_temp-x, TE_seebeck, dElec_resistance),solFlipped(1,:)));
+% %graphing power vs radius resolution
+% length_step = 0.01;
+% for radius_res = 10:300:10000
+%     radius_step = pipe_radius/radius_res;
+% 
+%     %plot to test right now
+% 
+%     %get radius step vs power output, then fit with a log equation
+%     %target_const_radius_step = 
+% end 
 
 
 
