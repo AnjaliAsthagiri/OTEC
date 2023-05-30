@@ -6,7 +6,7 @@ function sim = calcPower(sim)
     pipe_current = pipe_voltage/pipe_elec_resistance;
     pump_pow_fraction = pipe_pumping_pow/pipe_pow;
     new_total_pow_needed = sim.total_power/(1-pump_pow_fraction);
-    sim.power = struct("new", new_total_pow_needed, "pipe", pipe_pow, "pipe_pumping", pipe_pumping_pow, "pipe_current", pipe_current, "pipe_voltage", pipe_voltage);
+    sim.power = struct("new", new_total_pow_needed, "pipe", pipe_pow, "pipe_pumping", pipe_pumping_pow, "pipe_current", pipe_current, "pipe_resistance", pipe_elec_resistance, "pipe_voltage", pipe_voltage);
 end
 
 function pipe_pump_pow = getPumpPowerPerPipe(sim)
