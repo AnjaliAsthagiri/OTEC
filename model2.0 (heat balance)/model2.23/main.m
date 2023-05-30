@@ -1,22 +1,19 @@
-simArr = [];
+runSimulations;
 
-total_power = 500000;
-hot_water = struct("temperature", 300.15);
-for pipe_radius = 1 : 0.5 : 1
-    for pipe_length = 1 : 0.5 : 1
-        for cold_water_velocity = 0.01 : .1 : .01
-            for TE_material_thickness = 0.01 : 0.001 : 0.02
-                cold_water = struct("temperature", 279.15, "dynamic_viscosity", 1.73*10^-3, "specific_heat_capacity", 4184, "velocity", cold_water_velocity, "thermal_conductivity", 0.598);
-                TE_material = struct("thickness", TE_material_thickness, "thermal_conductivity", 1.4, "electrical_resistivity", 5.4945e-6, "seebeck", 162 * 10^-6, "cost_per_kg", 280);
-                pipe = struct("length", pipe_length, "radius", pipe_radius, "wall_thickness", 0.0015, "cost_per_kg", 10);
-                pipe = getPipeWithResolutionArrays(pipe);
+createGraph(horzcat(vertcat(simArr.pipe).radius), horzcat(vertcat(simArr.power).new), "Pipe radius", "Power new", "Power new v.s. Pipe radius");
+createGraph(horzcat(vertcat(simArr.pipe).length), horzcat(vertcat(simArr.power).new), "Pipe length", "Power new", "Power new v.s. Pipe length");
+createGraph(horzcat(vertcat(simArr.pipe).radius), horzcat(simArr.efficiency), "Pipe radius", "Efficiency", "Efficiency v.s. Pipe radius");
+createGraph(horzcat(vertcat(simArr.pipe).length), horzcat(simArr.efficiency), "Pipe length", "Efficiency", "Efficiency v.s. Pipe length");
+createGraph(horzcat(vertcat(simArr.pipe).radius), horzcat(vertcat(simArr.TE_material_use).total_material), "Pipe radius", "Total TE material", "Total TE material v.s. Pipe radius");
+createGraph(horzcat(vertcat(simArr.pipe).length), horzcat(vertcat(simArr.TE_material_use).total_material), "Pipe length", "Total TE material", "Total TE material v.s. Pipe length");
 
-                sim = struct("total_power", total_power, "hot_water", hot_water, "cold_water", cold_water, "TE_material", TE_material, "pipe", pipe);
-                sim = simulate(sim);
-                simArr(end+1) = sim;
-            end
-        end
-    end
-end
+createGraph(horzcat(vertcat(simArr.pipe).resolution), horzcat(vertcat(simArr.power).new), "Pipe resolution", "Power new", "Power new v.s. Pipe resolution");
 
-save('simulation', simArr); % TODO
+% save("simulation", simArr); % TODO
+
+imagesc(sim.pipe.length_arr,sim.pipe.radius_arr,sim.temperatures);
+set(gca, 'YDir', 'normal');
+colorbar
+ylabel('Radius (m)', 'FontName', 'Arial', 'FontSize', 20)
+xlabel('Distance from Pipe Inlet (m)','FontName', 'Arial', 'FontSize', 20)
+title('Temperature Distribution within Pipe', 'FontName', 'Arial', 'FontSize', 30,'FontWeight','Normal')
