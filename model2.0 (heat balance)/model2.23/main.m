@@ -1,9 +1,9 @@
 runSimulations;
 
 %%
-simArrFilt = simArrWithReynolds;
-%% Reynolds filter
-simArrFilt = simArrFilt(horzcat(simArrFilt.reynolds_number) < 4000);
+simArrFilt = simArr;
+%% Negative new power
+simArrFilt = simArrFilt(horzcat(vertcat(simArrFilt.power).new) > 0);
 %%
 simArrFilt = simArrFilt(horzcat(vertcat(simArrFilt.pipe).radius) == 0.1);
 %%
@@ -19,8 +19,10 @@ createGraph(horzcat(vertcat(simArrFilt.pipe).radius), horzcat(simArrFilt.neteffi
 createGraph(horzcat(vertcat(simArrFilt.pipe).length), horzcat(simArrFilt.netefficiency), "Pipe length", "Efficiency", "Efficiency v.s. Pipe length");
 createGraph(horzcat(vertcat(simArrFilt.pipe).radius), horzcat(vertcat(simArrFilt.TE_material_use).total_material), "Pipe radius", "Total TE material", "Total TE material v.s. Pipe radius");
 createGraph(horzcat(vertcat(simArrFilt.pipe).length), horzcat(vertcat(simArrFilt.TE_material_use).total_material), "Pipe length", "Total TE material", "Total TE material v.s. Pipe length");
-createGraph(horzcat(simArrFilt.total_kg_flow_rate), horzcat(vertcat(simArrFilt.TE_material_use).total_material), "Total TE material", "Cold Water Kg Flow Rate", "Total TE material v.s. Cold Water Kg Flow Rate");
-
+createGraph(horzcat(simArrFilt.total_kg_flow_rate), horzcat(vertcat(simArrFilt.TE_material_use).total_material), "Total TE material", "Cold Water Kg Flow Rate", "Total TE material v.s. Cold Water Kg Flow Rate", horzcat(simArrFilt.netefficiency));
+createGraph(horzcat(simArrFilt.total_kg_flow_rate), horzcat(vertcat(simArrFilt.TE_material_use).total_material), "Total TE material", "Cold Water Kg Flow Rate", "Total TE material v.s. Cold Water Kg Flow Rate", horzcat(vertcat(simArrFilt.pipe).radius));
+scatter3(horzcat(simArrFilt.total_kg_flow_rate), horzcat(vertcat(simArrFilt.TE_material_use).total_material), 1:size(simArrFilt, 2), [], horzcat(vertcat(simArrFilt.pipe).radius));
+xlabel("Total TE material"); ylabel("Cold Water Kg Flow Rate"); title("Cold Water Kg Flow Rate v.s. Total TE material");
 % save('simulation', 'simArr');
 %%
 imagesc(sim.pipe.length_arr,sim.pipe.radius_arr,sim.temperatures);
