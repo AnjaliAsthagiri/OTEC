@@ -1,15 +1,15 @@
 function sim = calcEfficiency(sim)
-       %efficiency per pipe
-        %Q in from variable thermal resistor
-        %peltier cooling
-        peltier_loss = sim.TE_material.seebeck*sim.hot_water.temperature*sim.power.pipe_current;
-        %electrical resistance
-        joule_loss = 0.5 * sim.power.pipe_current^2 * sim.power.pipe_resistance;
-        %thermal conductance
-        fourier_loss = sim.cold_water.specific_heat_capacity*getPipeKgFlowRate(sim)*sim.cold_water_temp_change;
-        %total heat pulled from heat source
-        sim.Q_in_pipe= peltier_loss + joule_loss + fourier_loss;
-        sim.Q_in = sim.Q_in_pipe * sim.TE_material_use.num_pipes;
+    %efficiency per pipe
+    %Q in from variable thermal resistor
+    %peltier cooling
+    peltier_loss = sim.TE_material.seebeck*sim.hot_water.temperature*sim.power.pipe_current;
+    %electrical resistance
+    joule_loss = 0.5 * sim.power.pipe_current^2 * sim.power.pipe_resistance;
+    %thermal conductance
+    fourier_loss = sim.cold_water.specific_heat_capacity*getPipeKgFlowRate(sim)*sim.cold_water_temp_change;
+    %total heat pulled from heat source
+    sim.Q_in_pipe= peltier_loss + joule_loss + fourier_loss;
+    sim.Q_in = sim.Q_in_pipe * sim.TE_material_use.num_pipes;
     %this accounts for pumping
     sim.netefficiency = sim.total_power/sim.Q_in;
     %this does not account for pumping

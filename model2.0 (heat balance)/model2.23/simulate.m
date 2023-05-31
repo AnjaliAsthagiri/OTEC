@@ -4,6 +4,7 @@
 function sim = simulate(sim)
     sim = calcTempDistribution(sim);
     sim = calcColdWaterTempChange(sim);
+    sim = calcReynoldsNumber(sim);
     sim = calcPower(sim);
     
     sim = calcTEMaterialUse(sim);

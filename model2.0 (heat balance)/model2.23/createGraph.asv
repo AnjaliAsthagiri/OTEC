@@ -1,9 +1,8 @@
 function createGraph(x, y, x_label, y_label, title_label, marked_x_values, marked_y_values)
     figure;
     hold on;
-    scatter3(x, y, 1:size(x, 2));
 %     for i = 1 : size(x,1)
-%         scatter(x(i,:), y(i,:));
+%         scatter3(x(i,:), y(i,:), 1:size(1,x));
 %     end
     xlabel(x_label);
     ylabel(y_label);
