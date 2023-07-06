@@ -1,5 +1,4 @@
 runSimulations;
-
 %%
 simArrFilt = simArr;
 %% Negative new power
