@@ -1,11 +1,10 @@
-function pipe = getPipeWithResolutionArrays(pipe, pipe_resolution)
-    pipe.pipe_resolution = pipe_resolution;
-    
-    pipe.length_arr = linspace(0,pipe.length,pipe_resolution.length_resolution);
+function pipe = getPipeWithResolutionArrays(pipe, length_resolution, radius_resolution)
+    pipe.length_arr = linspace(0,pipe.length,length_resolution);
     pipe.dX = pipe.length_arr(2) - pipe.length_arr(1);
+    pipe.length_resolution = length_resolution;
     
-    initial_res = pipe_resolution.radius_initial_res * pipe.radius;
-    exp_base = pipe_resolution.radius_exp_base;
+    initial_res = .0001 * pipe.radius;
+    exp_base = 1.0001;
     final_res_idx = calcLog(pipe.radius*(exp_base-1)/initial_res + 1, exp_base) - 1;
     final_res_idx = ceil(final_res_idx);
     radius_arr = arrayfun(@(x) initial_res*(exp_base^(x+1) - 1)/(exp_base-1), 0:final_res_idx);

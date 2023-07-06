@@ -1,11 +1,10 @@
-% set up what you iterate through - please enter as an array
+%set up what you iterate through - please enter as an array
 pipe_radius_iterations_arr = [0.1 : 1 : 10];
 pipe_length_iterations_arr = [0.1 : 5 : 10];
 pipe_cold_water_velocity_iterations_arr = [0.1 : 2 : 10];
-TE_material_thickness_iterations_arr = [0.001 : 0.001 : 1];
-
-simArr_paramBounds = struct("radius", pipe_radius_iterations_arr, "length", pipe_length_iterations_arr, "velocity", pipe_cold_water_velocity_iterations_arr, "thickness", TE_material_thickness_iterations_arr);
-simArr = runSimulations(simArr_paramBounds);
+TE_material_thickness_iterations_arr = linspace (0.001, 0.001, 1);
+simArr_parameters = struct("radius", pipe_radius_iterations_arr, "length", pipe_length_iterations_arr, "velocity", pipe_cold_water_velocity_iterations_arr, "thickness", TE_material_thickness_iterations_arr );
+simArr = runSimulations(simArr_parameters);
 %%
 simArrFilt = simArr;
 %% Negative new power
